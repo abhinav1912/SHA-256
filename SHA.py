@@ -21,15 +21,28 @@ class SHA256_Generator:
         size = len(int_array)
         binary_array = []
         for i in int_array:
-            binary_array.append(self.helper.convert_int_to_binary(i))
-        print(binary_array)
+            binary_array += [int(bit) for bit in self.helper.convert_int_to_binary(i)]
+        return binary_array
 
     def preprocess_binary_array(self, array: List[int]) -> List[int]:
         '''
         Convert given string to a binary form with length divisible by 512
         Last 64 bits should be original message length in binary form
         '''
-        pass
+        length = len(array)
+        message_len = [int(bit) for bit in self.helper.convert_int_to_binary(length, 64)]
+        array.append(1)
+        if length < 448:
+            array += [0]*(448-length-1)
+            array += message_len
+        elif 448 <= length <= 512:
+            array += [0]*(1024-length-1)
+            array[-64:] = message_len
+        else:
+            while len(array) % 512:
+                array.append(0)
+            array[-64:] = message_len
+        return array
 
     def create_message_schedule(self, message: list = []) -> List[str]:
         pass
@@ -45,3 +58,4 @@ class SHA256_Generator:
 
     def get_SHA256_hash(self, word: str) -> str:
         binary_array = self.convert_string_to_binary(word)
+        preprocessed_array = self.preprocess_binary_array(binary_array)
