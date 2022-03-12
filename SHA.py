@@ -59,3 +59,4 @@ class SHA256_Generator:
     def get_SHA256_hash(self, word: str) -> str:
         binary_array = self.convert_string_to_binary(word)
         preprocessed_array = self.preprocess_binary_array(binary_array)
+        chunks = self.helper.split_array_in_chunks(preprocessed_array, 512)

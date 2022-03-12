@@ -45,3 +45,9 @@ class SHA256_utility_helper:
     def convert_int_to_binary(self, number: int, length: int = 8) -> str:
         binary = bin(number)[2:]
         return binary.zfill(length)
+    
+    def split_array_in_chunks(self, array: List[int], chunk_size: int = 64) -> List[int]:
+        chunked_array = []
+        for i in range(0, len(array), chunk_size):
+            chunked_array.append(array[i:i+chunk_size])
+        return chunked_array
