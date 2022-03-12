@@ -51,3 +51,9 @@ class SHA256_utility_helper:
         for i in range(0, len(array), chunk_size):
             chunked_array.append(array[i:i+chunk_size])
         return chunked_array
+    
+    def rotate_right(self, array: List[int], shift: int) -> List[int]:
+        return array[-shift:] + shift[:-shift]
+    
+    def shift_right(self, array: List[int], shift: int) -> List[int]:
+        return shift*[0] + array[:-shift]
