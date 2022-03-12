@@ -1,6 +1,6 @@
 from typing import List
 
-class SHA256_utility:
+class SHA256_utility_helper:
     def __init__(self):
         pass
 

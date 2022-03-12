@@ -1,7 +1,8 @@
 from typing import List
+from SHA256_utils import SHA256_utility_helper
 
 class SHA256:
-    def __init__(self, helper: SHA256_utility):
+    def __init__(self, helper: SHA256_utility_helper):
         self.hash_values = helper.get_hash_constants()
         self.round_constants = helper.get_round_value_constants()
 
