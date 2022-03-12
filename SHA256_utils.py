@@ -35,3 +35,13 @@ class SHA256_utility_helper:
             '0x748f82ee', '0x78a5636f', '0x84c87814', '0x8cc70208',
             '0x90befffa', '0xa4506ceb', '0xbef9a3f7','0xc67178f2'
         ]
+    
+    def convert_string_to_int_array(self, string: str = "") -> List[int]:
+        int_array = []
+        for i in string:
+            int_array.append(ord(i))
+        return int_array
+    
+    def convert_int_to_binary(self, number: int, length: int = 8) -> str:
+        binary = bin(number)[2:]
+        return binary.zfill(length)
