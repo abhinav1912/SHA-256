@@ -4,8 +4,8 @@ class SHA256_utility_helper:
     def __init__(self):
         pass
 
-    def get_hash_constants(self) -> List[str]:
-        return [
+    def get_hash_constants(self) -> tuple:
+        return (
             '0x6a09e667',
             '0xbb67ae85',
             '0x3c6ef372',
@@ -14,7 +14,7 @@ class SHA256_utility_helper:
             '0x9b05688c',
             '0x1f83d9ab',
             '0x5be0cd19'
-        ]
+        )
 
     def get_round_value_constants(self) -> List[str]:
         return [

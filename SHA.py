@@ -55,8 +55,24 @@ class SHA256_Generator:
                 array[i] = self.helper.add(self.helper.add(self.helper.add(array[i-16], s0), array[i-7]), s1)
         return array
 
-    def compression(self, message: list = []) -> List[str]:
-        pass
+    def compression(self, message: list = []) -> tuple:
+        a,b,c,d,e,f,g,h = self.hash_values
+        for j in range(64):
+            S1 = self.helper.XORXOR(self.helper.rotate_right(e, 6), self.helper.rotate_right(e, 11), self.helper.rotate_right(e, 25) )
+            ch = self.helper.XOR(self.helper.AND(e, f), self.helper.AND(self.helper.NOT(e), g))
+            temp1 = self.helper.add(self.helper.add(self.helper.add(self.helper.add(h, S1), ch), self.round_constants[j]), message[j])
+            S0 = self.helper.XORXOR(self.helper.rotate_right(a, 2), self.helper.rotate_right(a, 13), self.helper.rotate_right(a, 22))
+            m = self.helper.XORXOR(self.helper.AND(a, b), self.helper.AND(a, c), self.helper.AND(b, c))
+            temp2 = self.helper.add(S0, m)
+            h = g
+            g = f
+            f = e
+            e = self.helper.add(d, temp1)
+            d = c
+            c = b
+            b = a
+            a = self.helper.add(temp1, temp2)
+        return (a,b,c,d,e,f,g,h)
 
     def modify_hash_values(self, values = []) -> List[str]:
         pass
@@ -69,3 +85,4 @@ class SHA256_Generator:
         preprocessed_array = self.preprocess_binary_array(binary_array)
         chunks = self.helper.split_array_in_chunks(preprocessed_array, 512)
         message = self.create_message_schedule(chunks)
+        compressed_message = self.compression(message)
