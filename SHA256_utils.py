@@ -5,7 +5,7 @@ class SHA256_utility_helper:
         pass
 
     def get_hash_constants(self) -> tuple:
-        return (
+        return tuple(self.initialize_constants([
             '0x6a09e667',
             '0xbb67ae85',
             '0x3c6ef372',
@@ -14,10 +14,10 @@ class SHA256_utility_helper:
             '0x9b05688c',
             '0x1f83d9ab',
             '0x5be0cd19'
-        )
+        ]))
 
     def get_round_value_constants(self) -> List[str]:
-        return [
+        return self.initialize_constants([
             '0x428a2f98', '0x71374491', '0xb5c0fbcf', '0xe9b5dba5',
             '0x3956c25b', '0x59f111f1', '0x923f82a4','0xab1c5ed5',
             '0xd807aa98', '0x12835b01', '0x243185be', '0x550c7dc3',
@@ -34,7 +34,28 @@ class SHA256_utility_helper:
             '0x391c0cb3', '0x4ed8aa4a', '0x5b9cca4f', '0x682e6ff3',
             '0x748f82ee', '0x78a5636f', '0x84c87814', '0x8cc70208',
             '0x90befffa', '0xa4506ceb', '0xbef9a3f7','0xc67178f2'
-        ]
+        ])
+
+    def initialize_constants(self, values):
+        binaries = [bin(int(v, 16))[2:] for v in values]
+        words = []
+        for binary in binaries:
+            word = []
+            for b in binary:
+                word.append(int(b))
+            words.append(self.fillZeros(word, 32, 'BE'))
+        return words
+    
+    def fillZeros(self, bits, length=8, endian='LE'):
+        l = len(bits)
+        if endian == 'LE':
+            for i in range(l, length):
+                bits.append(0)
+        else: 
+            while l < length:
+                bits.insert(0, 0)
+                l = len(bits)
+        return bits
     
     def convert_string_to_int_array(self, string: str = "") -> List[int]:
         int_array = []
@@ -45,6 +66,16 @@ class SHA256_utility_helper:
     def convert_int_to_binary(self, number: int, length: int = 8) -> str:
         binary = bin(number)[2:]
         return binary.zfill(length)
+    
+    def binary_to_hexadecimal(self, value):
+        value = ''.join([str(x) for x in value])
+        binaries = []
+        for d in range(0, len(value), 4):
+            binaries.append('0b' + value[d:d+4])
+        hexes = ''
+        for b in binaries:
+            hexes += hex(int(b ,2))[2:]
+        return hexes
     
     def split_array_in_chunks(self, array: List[int], chunk_size: int = 64) -> List[int]:
         chunked_array = []

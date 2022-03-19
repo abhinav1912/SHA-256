@@ -88,8 +88,11 @@ class SHA256_Generator:
 
         return [h0,h1,h2,h3,h4,h5,h6,h7]
 
-    def create_final_hash(self) -> str:
-        pass
+    def create_final_hash(self, values) -> str:
+        digest = ''
+        for val in values:
+            digest += self.helper.binary_to_hexadecimal(val)
+        return digest
 
     def get_SHA256_hash(self, word: str) -> str:
         binary_array = self.convert_string_to_binary(word)
@@ -98,3 +101,5 @@ class SHA256_Generator:
         message = self.create_message_schedule(chunks)
         compressed_message = self.compression(message)
         modified_values = self.modify_hash_values(compressed_message)
+        hash = self.create_final_hash(modified_values)
+        return hash
