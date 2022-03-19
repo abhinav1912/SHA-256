@@ -75,7 +75,18 @@ class SHA256_Generator:
         return (a,b,c,d,e,f,g,h)
 
     def modify_hash_values(self, values = []) -> List[str]:
-        pass
+        a,b,c,d,e,f,g,h = values
+        h0,h1,h2,h3,h4,h5,h6,h7 = self.hash_values
+        h0 = self.helper.add(h0, a)
+        h1 = self.helper.add(h1, b)
+        h2 = self.helper.add(h2, c)
+        h3 = self.helper.add(h3, d)
+        h4 = self.helper.add(h4, e)
+        h5 = self.helper.add(h5, f)
+        h6 = self.helper.add(h6, g)
+        h7 = self.helper.add(h7, h)
+
+        return [h0,h1,h2,h3,h4,h5,h6,h7]
 
     def create_final_hash(self) -> str:
         pass
@@ -86,3 +97,4 @@ class SHA256_Generator:
         chunks = self.helper.split_array_in_chunks(preprocessed_array, 512)
         message = self.create_message_schedule(chunks)
         compressed_message = self.compression(message)
+        modified_values = self.modify_hash_values(compressed_message)
