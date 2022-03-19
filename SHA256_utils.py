@@ -53,7 +53,47 @@ class SHA256_utility_helper:
         return chunked_array
     
     def rotate_right(self, array: List[int], shift: int) -> List[int]:
-        return array[-shift:] + shift[:-shift]
+        return array[-shift:] + array[:-shift]
     
     def shift_right(self, array: List[int], shift: int) -> List[int]:
         return shift*[0] + array[:-shift]
+
+    def add(self, i, j):
+        #takes to lists of binaries and adds them
+        length = len(i)
+        sums = list(range(length))
+        #initial input needs an carry over bit as 0
+        c = 0
+        for x in range(length-1,-1,-1):
+            #add the inout bits with a double xor gate
+            sums[x] = self.xorxor(i[x], j[x], c)
+            #carry over bit is equal the most represented, e.g., output = 0,1,0 
+            # then 0 is the carry over bit
+            c = self.maj(i[x], j[x], c)
+        #returns list of bits 
+        return sums
+
+    #truth condition is integer 1
+    def isTrue(self, x): return x == 1
+
+    #simple if 
+    def if_(self, i, y, z): return y if self.isTrue(i) else z
+
+    #and - both arguments need to be true
+    def and_(self, i, j): return self.if_(i, j, 0)
+    def AND(self, i, j): return [self.and_(ia, ja) for ia, ja in zip(i,j)] 
+
+    #simply negates argument
+    def not_(self, i): return self.if_(i, 0, 1)
+    def NOT(self, i): return [self.not_(x) for x in i]
+
+    #retrun true if either i or j is true but not both at the same time
+    def xor(self, i, j): return self.if_(i, self.not_(j), j)
+    def XOR(self, i, j): return [self.xor(ia, ja) for ia, ja in zip(i, j)]
+
+    #if number of truth values is odd then return true
+    def xorxor(self, i, j, l): return self.xor(i, self.xor(j, l))
+    def XORXOR(self, i, j, l): return [self.xorxor(ia, ja, la) for ia, ja, la, in zip(i, j, l)]
+
+    #get the majority of results, i.e., if 2 or more of three values are the same 
+    def maj(self, i,j,k): return max([i,j,], key=[i,j,k].count)

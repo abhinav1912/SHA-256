@@ -44,8 +44,16 @@ class SHA256_Generator:
             array[-64:] = message_len
         return array
 
-    def create_message_schedule(self, message: list = []) -> List[str]:
-        pass
+    def create_message_schedule(self, message: list = []) -> List[int]:
+        for chunk in message:
+            array = self.helper.split_array_in_chunks(chunk, 32)
+            for i in range(48):
+                array.append([0 for j in range(32)])
+            for i in range(16, 64):
+                s0 = self.helper.XORXOR(self.helper.rotate_right(array[i-15], 7), self.helper.rotate_right(array[i-15], 18), self.helper.shift_right(array[i-15], 3) ) 
+                s1 = self.helper.XORXOR(self.helper.rotate_right(array[i-2], 17), self.helper.rotate_right(array[i-2], 19), self.helper.shift_right(array[i-2], 10))
+                array[i] = self.helper.add(self.helper.add(self.helper.add(array[i-16], s0), array[i-7]), s1)
+        return array
 
     def compression(self, message: list = []) -> List[str]:
         pass
@@ -60,3 +68,4 @@ class SHA256_Generator:
         binary_array = self.convert_string_to_binary(word)
         preprocessed_array = self.preprocess_binary_array(binary_array)
         chunks = self.helper.split_array_in_chunks(preprocessed_array, 512)
+        message = self.create_message_schedule(chunks)
