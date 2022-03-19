@@ -14,7 +14,7 @@ Followed this [guide] for a step by step explanation.
 Can be executed on any Python version, but v3+ is recommended.
 
 - Clone the repository
-- Inside `test_object` in `main.py`, modify the string. Set it to the value for which you need to compute the hash
+- In `main.py`, modify the `root_string`. Set it to the value for which you need to compute the hash
 - Execute `main.py`
 
    [guide]: <https://qvault.io/cryptography/how-sha-2-works-step-by-step-sha-256>
